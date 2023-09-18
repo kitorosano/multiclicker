@@ -5,6 +5,7 @@ require('dotenv').config({
 const express = require('express')
 const cookieParser = require('cookie-parser')
 const app = express()
+const path = require('path')
 const http = require('http')
 const server = http.createServer(app)
 
@@ -15,7 +16,7 @@ require('./config/mongo')
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 app.use(cookieParser(process.env.SECRET)) // initializing the lib
-// app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(__dirname + '/node_modules'))
 
 const session = require('express-session')
 const sessionMiddleware = session({
