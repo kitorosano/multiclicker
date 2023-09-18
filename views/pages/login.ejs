@@ -1,0 +1,131 @@
+<%- include('../partials/head') %>
+
+<style>
+  main {
+    display: flex;
+    width: 100%;
+    max-width: 840px;
+    padding: 20px;
+    gap: 40px;
+  }
+
+  section {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 15px;
+    min-height: 300px;
+    box-shadow: 0 0 10px #000;
+  }
+
+  section + section {
+    margin-left: 20px;
+  }
+
+  h2 {
+    margin: 0;
+    padding: 20px;
+    width: 100%;
+    text-align: center;
+    background-color: #eee;
+    border-bottom: 1px solid #ccc;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    width: 100%;
+  }
+
+  input {
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background: none;
+    color: #fff;
+  }
+
+  input + p {
+    color: gray;
+    font-size: 12px;
+    margin-bottom: 15px;
+  }
+
+  button {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #eee;
+    cursor: pointer;
+    text-transform: uppercase;
+  }
+
+  button:hover {
+    background-color: #ddd;
+  }
+</style>
+<body>
+  <%- include('../partials/message') %>
+  <main>
+    <section>
+      <h2>Entrar</h2>
+
+      <form
+        id="loginform"
+        action="/api/auth"
+        method="POST"
+      >
+        <input
+          type="text"
+          name="nickemail"
+          placeholder="Email"
+          required
+        />
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          required
+        />
+        <button type="submit">Entrar</button>
+      </form>
+    </section>
+
+    <section>
+      <h2>Registrarme</h2>
+
+      <form
+        id="registerform"
+        action="/api/users"
+        method="POST"
+      >
+        <input
+          type="text"
+          name="nickname"
+          placeholder="Nickname"
+          required
+        />
+        <input
+          type="email"
+          name="email"
+          placeholder="Nickname or Email"
+          required
+        />
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          required
+        />
+        <p>*Debe tener un minimo de 6 caracteres</p>
+        <button type="submit">Registrarme</button>
+      </form>
+    </section>
+  </main>
+
+  <script src="/socket.io/socket.io.js"></script>
+</body>
+<%- include('../partials/footer') %>

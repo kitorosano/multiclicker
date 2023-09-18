@@ -1,0 +1,37 @@
+<header>
+  <button
+    id="rules"
+    class="btn"
+  >
+    Reglas
+  </button>
+  <ul id="score">
+    <li>Puntaje: <span><%= locals.usuario.totalScore %></span></li>
+    <li>Combo: <span><%= locals.usuario.currentCombo %></span></li>
+    <li>Max Combo: <span><%= locals.usuario.maxCombo %></span></li>
+  </ul>
+  <h1>Bienvenido, <span><%= locals.usuario.nickname %></span></h1>
+
+  <!-- modal for rules -->
+
+  <div
+    id="modal"
+    class="modal"
+  >
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h3>Reglas</h3>
+      <p>Este es un juego online en donde juegan todos contra todos.</p>
+      <p>
+        Cada jugador tiene un puntaje, el cual aumenta a medida que va golpeando
+        las pelotas que aparecen en la pantalla. Pero es que no solo eso, cada
+        vez que golpea una pelota, su combo aumenta, y a medida que aumenta, el
+        puntaje que obtiene por cada pelota golpeada aumenta.
+      </p>
+      <p>
+        Busca ser el primero en la tabla de posiciones, acumulando la mayor
+        cantidad de puntos y combos. ¿Lograras ser el mejor?
+      </p>
+    </div>
+  </div>
+</header>

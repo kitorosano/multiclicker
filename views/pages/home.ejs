@@ -1,0 +1,386 @@
+<%- include('../partials/head') %>
+<style>
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 1em 2em;
+    background-color: #1d1d1d;
+  }
+
+  header > p {
+    color: #fff;
+    font-size: 1em;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+  }
+
+  header > h1 {
+    color: #fff;
+    text-align: center;
+    font-size: 2em;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  header > h1 > span {
+    color: #f00;
+  }
+
+  main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 1em 2em;
+  }
+
+  section {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    padding: 1em 2em;
+  }
+
+  section.playersHeader {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    padding: 1em 2em;
+    background-color: #1d1d1d;
+  }
+
+  section h2 {
+    color: #fff;
+    font-size: 1.5em;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 5px 0 15px 0;
+    text-decoration: underline;
+  }
+
+  /* #onlinePlayers {
+    color: #f00;
+  } */
+
+  section h3 {
+    color: #bbb;
+    font-size: 0.8em;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-align: center;
+  }
+
+  canvas {
+    background-color: #111;
+    border: 1px solid #444;
+    box-shadow: 0 0 5px #fff;
+    margin: 10px auto;
+    /* flex: 1; */
+  }
+
+  .btn {
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px #ccc;
+    background-color: transparent;
+    cursor: pointer;
+    text-transform: uppercase;
+    color: #fff;
+    font-size: 1em;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    transition: background-color 0.2s ease-in-out;
+  }
+
+  .btn:hover {
+    background-color: #333;
+  }
+
+  #score {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    color: #fff;
+    font-size: 1em;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    gap: 20px;
+  }
+
+  ol {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+    color: #fff;
+    font-size: 1.2em;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    gap: 10px;
+  }
+
+  ol li {
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 0 10px;
+  }
+
+  li span.playerScoreTotal {
+    color: #0f0;
+  }
+
+  li span.playerScoreMaxCombo {
+    color: #00f;
+  }
+
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  .modal-content {
+    background-color: #1d1d1d;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 600px;
+    color: #fff;
+    font-size: 1em;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+  }
+
+  .modal-content h3 {
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 20px;
+  }
+
+  .modal-content p {
+    text-align: justify;
+    margin-bottom: 20px;
+  }
+
+  span.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  span.close:hover {
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+  }
+</style>
+<body>
+  <%- include('../partials/message') %> <%- include('../partials/header') %>
+
+  <main>
+    <%- include('../partials/players') %>
+    <canvas></canvas>
+  </main>
+
+  <script src="/socket.io/socket.io.js"></script>
+
+  <script>
+    window.onload = function () {
+      class Ball {
+        constructor(x, y, radius, color) {
+          this.x = x
+          this.y = y
+          this.radius = radius
+          this.color = color
+        }
+
+        draw(ctx) {
+          ctx.beginPath()
+          ctx.fillStyle = this.color
+          ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false)
+          ctx.fill()
+          ctx.closePath()
+        }
+      }
+
+      class Game {
+        constructor(canvas, socket) {
+          this.ctx = canvas.getContext('2d')
+          this.canvas = canvas
+          this.width = canvas.width
+          this.height = canvas.height
+          this.socket = socket
+
+          this.balls = []
+          this.maxBalls = 5
+          this.isPaused = false
+        }
+
+        togglePause() {
+          this.isPaused = !this.isPaused
+          if (!this.isPaused) this.loop()
+        }
+
+        checkIfMouseEvInsideBall(e) {
+          const rect = e.target.getBoundingClientRect()
+          const x = e.clientX - rect.left
+          const y = e.clientY - rect.top
+
+          // check if click is inside a ball
+          const ball = this.balls.find((ball) => {
+            const dx = ball.x - x
+            const dy = ball.y - y
+            const distance = Math.sqrt(dx * dx + dy * dy)
+
+            return distance < ball.radius
+          })
+
+          return { isInside: !!ball, ball }
+        }
+
+        init() {
+          this.canvas.addEventListener('click', (e) => {
+            const { ball, isInside } = this.checkIfMouseEvInsideBall(e)
+
+            this.socket.emit('score', isInside)
+            if (isInside) this.balls = this.balls.filter((b) => b !== ball)
+          })
+        }
+
+        addBall(newBall) {
+          const { rndX, rndY, radius, color } = newBall
+
+          let cx = Math.floor(rndX * this.width)
+          if (cx > this.width + radius) cx -= radius
+          if (cx < radius) cx += radius
+
+          let cy = Math.floor(rndY * this.height)
+          if (cy > this.height + radius) cy -= radius
+          if (cy < radius) cy += radius
+
+          this.balls.push(new Ball(cx, cy, radius, color))
+
+          if (this.balls.length > this.maxBalls) {
+            this.balls.shift()
+          }
+        }
+
+        update() {}
+
+        draw() {
+          this.ctx.clearRect(0, 0, this.width, this.height)
+          this.balls.forEach((ball) => ball.draw(this.ctx))
+
+          if (this.isPaused) {
+            this.ctx.fillStyle = 'rgba(0, 0, 0, 0.5)'
+            this.ctx.fillRect(0, 0, this.width, this.height)
+            this.ctx.fillStyle = '#fff'
+            this.ctx.font = '2em Arial'
+            this.ctx.textAlign = 'center'
+            this.ctx.fillText('Paused', this.width / 2, this.height / 2)
+          }
+        }
+
+        loop() {
+          this.update()
+          this.draw()
+
+          if (!this.isPaused) requestAnimationFrame(() => this.loop())
+        }
+      }
+
+      const canvas = document.querySelector('canvas')
+      const ctx = canvas.getContext('2d')
+      canvas.width = window.innerWidth * 0.6
+      canvas.height = window.innerHeight * 0.8
+
+      const socket = io()
+
+      const BTN_LOGOUT = document.querySelector('#logout')
+      BTN_LOGOUT.addEventListener('click', () => {
+        window.location.href = '/logout'
+      })
+
+      const BTN_RULES = document.querySelector('#rules')
+      const MODAL = document.querySelector('#modal')
+      const SPAN_CLOSE = document.querySelector('.close')
+      BTN_RULES.addEventListener('click', () => {
+        MODAL.style.display = 'block'
+      })
+      SPAN_CLOSE.addEventListener('click', () => {
+        MODAL.style.display = 'none'
+      })
+
+      const game = new Game(canvas, socket)
+      game.init()
+      game.loop()
+
+      document.addEventListener('keydown', (e) => {
+        if (e.code === 'Space') {
+          game.togglePause()
+        }
+      })
+
+      socket.on('update', ({ newBall, players }) => {
+        game.addBall(newBall)
+
+        const OL_PLAYERS = document.querySelector('#players')
+        OL_PLAYERS.innerHTML = ''
+        players.forEach((player, index) => {
+          if (index > 10) return
+          console.log('player', player)
+          const li = document.createElement('li')
+          li.innerHTML = `
+            ${player.nickname}: 
+            <span class="playerScoreTotal">${player.totalScore}</span> -
+            <span class="playerScoreMaxCombo">${player.maxCombo}</span>
+          `
+          OL_PLAYERS.appendChild(li)
+        })
+      })
+
+      // QUITAR ESTE Y USAR EL UPDATE SIMPLEMETNE
+      socket.on('playerScore', (score) => {
+        const { totalScore, currentCombo, maxCombo } = score
+
+        const scoreEl = document.querySelector('#score')
+        scoreEl.innerHTML = `<li>Puntaje: <span class="playerScoreTotal">${totalScore}</li>
+                              <li>Max Combo: <span class="playerScoreMaxCombo">${maxCombo}</span></li>
+                              <li>Combo: <span>${currentCombo}</span></li>
+                              `
+      })
+
+      socket.on('onlinePlayers', (onlinePlayers) => {
+        const onlinePlayersEl = document.querySelector('#onlinePlayers')
+        onlinePlayersEl.textContent = onlinePlayers
+      })
+    }
+  </script>
+</body>
+<%- include('../partials/footer') %>

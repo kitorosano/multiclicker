@@ -1,0 +1,8 @@
+<% if(locals.message && locals.message.text) {%>
+<span
+  id="message"
+  class="<%= locals.message.type %>"
+>
+  <%= locals.message.text %>
+</span>
+<% } %>
