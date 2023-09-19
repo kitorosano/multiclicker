@@ -1,19 +1,19 @@
 <header>
-  <button
-    id="rules"
-    class="btn"
-  >
-    Reglas
-  </button>
+  <h1>Bienvenido, <span><%= locals.usuario.nickname %></span></h1>
+  
   <ul id="score">
     <li>Puntaje: <span><%= locals.usuario.totalScore %></span></li>
     <li>Combo: <span><%= locals.usuario.currentCombo %></span></li>
     <li>Max Combo: <span><%= locals.usuario.maxCombo %></span></li>
   </ul>
-  <h1>Bienvenido, <span><%= locals.usuario.nickname %></span></h1>
 
   <!-- modal for rules -->
-
+  <button
+  id="rules"
+  class="btn"
+>
+  Reglas
+</button>
   <div
     id="modal"
     class="modal"
