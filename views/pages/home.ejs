@@ -68,6 +68,15 @@
     text-decoration: underline;
   }
 
+  section div {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    padding: 1em 2em;
+    background-color: #1d1d1d;
+  }
+
   /* #onlinePlayers {
     color: #f00;
   } */
@@ -198,6 +207,10 @@
     color: #fff;
     text-decoration: none;
     cursor: pointer;
+  }
+  
+  #logout {
+    margin-top: 20px;
   }
 </style>
 <body>
@@ -354,7 +367,6 @@
         OL_PLAYERS.innerHTML = ''
         players.forEach((player, index) => {
           if (index > 10) return
-          console.log('player', player)
           const li = document.createElement('li')
           li.innerHTML = `
             ${player.nickname}: 

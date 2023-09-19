@@ -3,19 +3,20 @@
 <style>
   main {
     display: flex;
+    align-items: center;
+    justify-content: center;
     width: 100%;
-    max-width: 840px;
+    height: 100vh;
     padding: 20px;
     gap: 40px;
   }
 
   section {
     display: flex;
-    flex: 1;
     flex-direction: column;
     align-items: center;
     border-radius: 15px;
-    min-height: 300px;
+    height: 300px;
     box-shadow: 0 0 10px #000;
   }
 
@@ -29,23 +30,35 @@
     width: 100%;
     text-align: center;
     background-color: #eee;
+    text-transform: uppercase;
     border-bottom: 1px solid #ccc;
   }
 
   form {
     display: flex;
+    flex: 1;
     flex-direction: column;
+    justify-content: space-between;
     padding: 20px;
     width: 100%;
   }
 
+  form div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    gap: 10px;
+  }
+
   input {
-    margin-bottom: 15px;
+    width: 300px;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     background: none;
     color: #fff;
+    margin-bottom: 10px;
   }
 
   input + p {
@@ -60,36 +73,38 @@
     border-radius: 5px;
     background-color: #eee;
     cursor: pointer;
-    text-transform: uppercase;
+    transition: background-color 0.2s ease;
   }
 
   button:hover {
-    background-color: #ddd;
+    background-color: #ccc;
   }
 </style>
 <body>
   <%- include('../partials/message') %>
   <main>
     <section>
-      <h2>Entrar</h2>
+      <h2>Iniciar Sesión</h2>
 
       <form
         id="loginform"
         action="/api/auth"
         method="POST"
       >
-        <input
-          type="text"
-          name="nickemail"
-          placeholder="Email"
-          required
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          required
-        />
+        <div>
+          <input
+            type="text"
+            name="nickemail"
+            placeholder="Nickname o Correo"
+            required
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Contraseña"
+            required
+          />
+        </div>
         <button type="submit">Entrar</button>
       </form>
     </section>
@@ -111,17 +126,17 @@
         <input
           type="email"
           name="email"
-          placeholder="Nickname or Email"
+          placeholder="Correo"
           required
         />
         <input
           type="password"
           name="password"
-          placeholder="Password"
+          placeholder="Contraseña"
           required
         />
-        <p>*Debe tener un minimo de 6 caracteres</p>
-        <button type="submit">Registrarme</button>
+        <p>*La contraseña debe tener un minimo de 6 caracteres</p>
+        <button type="submit">Crear usuario</button>
       </form>
     </section>
   </main>

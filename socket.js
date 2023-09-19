@@ -19,7 +19,6 @@ module.exports = async (server, sessionMiddleware) => {
 
     socket.join(nickname)
 
-    console.log('connectedPlayers', connectedPlayers)
     GAME.addPlayer(nickname)
     io.in(nickname).emit('playerScore', GAME.getPlayerByNickname(nickname))
     io.emit('onlinePlayers', connectedPlayers)
