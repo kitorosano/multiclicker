@@ -25,7 +25,7 @@
     letter-spacing: 0.1em;
   }
 
-  header > h1 > span {
+  span.myself {
     color: #f00;
   }
 
@@ -338,6 +338,7 @@
       canvas.width = window.innerWidth * 0.6
       canvas.height = window.innerHeight * 0.8
 
+      const nickname = '<%= locals.usuario.nickname %>'
       const socket = io()
 
       const BTN_LOGOUT = document.querySelector('#logout')
@@ -372,9 +373,15 @@
         OL_PLAYERS.innerHTML = ''
         players.forEach((player, index) => {
           const li = document.createElement('li')
-          li.innerHTML = `
-          <span>${index + 1}. ${player.nickname}:</span>
+          if (player.nickname === nickname) {
+            li.innerHTML = `
+            <span class="myself">${index + 1}. ${player.nickname}:</span>
           `
+          } else {
+            li.innerHTML = `
+            <span>${index + 1}. ${player.nickname}:</span>
+          `
+          }
           const p = document.createElement('p')
           p.innerHTML = `
             <span class="playerScoreTotal">${player.totalScore}</span>

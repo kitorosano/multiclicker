@@ -1,5 +1,5 @@
 <header>
-  <h1>Bienvenido, <span><%= locals.usuario.nickname %></span></h1>
+  <h1>Bienvenido, <span class="myself"><%= locals.usuario.nickname %></span></h1>
   
   <ul id="score">
     <li>Puntaje: <span><%= locals.usuario.totalScore %></span></li>
@@ -21,20 +21,17 @@
     <div class="modal-content">
       <span class="close">&times;</span>
       <h3>Reglas</h3>
-      <p>Este es un juego online en donde juegan todos contra todos.</p>
+      <p>Multiclicker - Todos contra todos</p>
       <p>
-        Cada jugador tiene un puntaje, el cual aumenta a medida que va golpeando
-        las pelotas que aparecen en la pantalla. Pero es que no solo eso, cada
-        vez que golpea una pelota, su combo aumenta, y a medida que aumenta, el
-        puntaje que obtiene por cada pelota golpeada aumenta.
+        Aumenta tus puntos clickeando las pelotas antes de que desaparezcan. 
+        ¡A mayor combo mayor puntaje!
       </p>
       <p>
-        Pero cuidado! Si el jugador no golpea una pelota, su combo se reinicia a 0,
-        y el puntaje se restara por 50 puntos.
+        Pero cuidado! Un click en el fondo y tu combo se reinicia a 0
+        restandote 50 puntos.
       </p>
       <p>
-        Busca ser el primero en la tabla de posiciones, acumulando la mayor
-        cantidad de puntos y combos. ¿Lograras ser el mejor?
+        ¿Te atreves a permanecer en la cima?
       </p>
     </div>
   </div>
