@@ -208,7 +208,7 @@
     text-decoration: none;
     cursor: pointer;
   }
-  
+
   #logout {
     margin-top: 20px;
   }
@@ -366,7 +366,6 @@
         const OL_PLAYERS = document.querySelector('#players')
         OL_PLAYERS.innerHTML = ''
         players.forEach((player, index) => {
-          if (index > 10) return
           const li = document.createElement('li')
           li.innerHTML = `
             ${player.nickname}: 

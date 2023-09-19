@@ -63,5 +63,17 @@ class GameState {
   get players() {
     return this._players.filter((n) => n && n)
   }
+
+  getTop10Players() {
+    const players = this.players.sort((a, b) => {
+      if (a.totalScore > b.totalScore) return -1
+      if (a.totalScore < b.totalScore) return 1
+      if (a.maxCombo > b.maxCombo) return -1
+      if (a.maxCombo < b.maxCombo) return 1
+      return 0
+    })
+
+    return players.slice(0, 10)
+  }
 }
 module.exports = GameState

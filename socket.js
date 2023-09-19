@@ -37,7 +37,7 @@ module.exports = async (server, sessionMiddleware) => {
   setInterval(() => {
     io.emit('update', {
       newBall: GAME.addBall(),
-      players: GAME.players
+      players: GAME.getTop10Players()
     })
   }, 300)
 
